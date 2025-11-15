@@ -36,12 +36,14 @@ export default function ScrollLinkedSection() {
 
     sectionsRef.current.forEach((ref, i) => {
       if (!ref) return;
+
       const observer = new IntersectionObserver(
         ([entry]) => {
           if (entry.isIntersecting) setActiveIndex(i);
         },
         { threshold: 0.5 }
       );
+
       observer.observe(ref);
       observers.push(observer);
     });
@@ -49,7 +51,7 @@ export default function ScrollLinkedSection() {
     return () => observers.forEach((o) => o.disconnect());
   }, []);
 
-  // Update video source ONLY when activeIndex changes → lightweight!
+  // Update video source only when activeIndex changes
   useEffect(() => {
     if (!videoRef.current) return;
     const video = videoRef.current;
@@ -71,7 +73,9 @@ export default function ScrollLinkedSection() {
           {content.map((item, i) => (
             <div
               key={i}
-              ref={(el) => (sectionsRef.current[i] = el)}
+              ref={(el) => {
+                sectionsRef.current[i] = el;
+              }}
               className="min-h-[50vh] flex flex-col justify-center"
             >
               <h2
